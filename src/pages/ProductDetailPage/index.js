@@ -1,18 +1,25 @@
 import React from "react";
+import { useParams } from "react-router-dom";
+
+import { useGetProduct } from "../../api/hooks/productHooks";
 
 const ProductDetailPage = (props) => {
+  const { id } = useParams();
+  const { isLoading, isError, data, error } = useGetProduct(id);
+  console.log("🚀 ~ file: index.js ~ line 8 ~ ProductDetailPage ~ data", data);
+  const product = data?.data;
   return (
     <React.Fragment>
       <div class="all-title-box">
         <div class="container">
           <div class="row">
             <div class="col-lg-12">
-              <h2>Shop Detail</h2>
+              <h2>Product details</h2>
               <ul class="breadcrumb">
                 <li class="breadcrumb-item">
-                  <a href="#">Shop</a>
+                  <a href="#">Product</a>
                 </li>
-                <li class="breadcrumb-item active">Shop Detail </li>
+                <li class="breadcrumb-item active">Product Detail </li>
               </ul>
             </div>
           </div>
@@ -33,11 +40,11 @@ const ProductDetailPage = (props) => {
                     {" "}
                     <img
                       class="d-block w-100"
-                      src="images/big-img-01.jpg"
+                      src={"http://localhost:1337" + product?.thumbnail?.url}
                       alt="First slide"
                     />{" "}
                   </div>
-                  <div class="carousel-item">
+                  {/*<div class="carousel-item">
                     {" "}
                     <img
                       class="d-block w-100"
@@ -52,7 +59,7 @@ const ProductDetailPage = (props) => {
                       src="images/big-img-03.jpg"
                       alt="Third slide"
                     />{" "}
-                  </div>
+                  </div>*/}
                 </div>
                 <a
                   class="carousel-control-prev"
@@ -80,11 +87,11 @@ const ProductDetailPage = (props) => {
                   >
                     <img
                       class="d-block w-100 img-fluid"
-                      src="images/smp-img-01.jpg"
+                      src={"http://localhost:1337" + product?.thumbnail?.url}
                       alt=""
                     />
                   </li>
-                  <li data-target="#carousel-example-1" data-slide-to="1">
+                  {/*<li data-target="#carousel-example-1" data-slide-to="1">
                     <img
                       class="d-block w-100 img-fluid"
                       src="images/smp-img-02.jpg"
@@ -97,40 +104,31 @@ const ProductDetailPage = (props) => {
                       src="images/smp-img-03.jpg"
                       alt=""
                     />
-                  </li>
+                  </li>*/}
                 </ol>
               </div>
             </div>
+
             <div class="col-xl-7 col-lg-7 col-md-6">
               <div class="single-product-details">
-                <h2>Fachion Lorem ipsum dolor sit amet</h2>
+                <h2>{product?.name}</h2>
                 <h5>
                   {" "}
-                  <del>$ 60.00</del> $40.79
+                  {/*<del>$ 60.00</del>*/}
+                  {product?.price}
                 </h5>
                 <p class="available-stock">
-                  <span>
-                    {" "}
-                    More than 20 available / <a href="#">8 sold </a>
-                  </span>
+                  <span> {product?.priceText}</span>
                 </p>
                 <h4>Short Description:</h4>
-                <p>
-                  Nam sagittis a augue eget scelerisque. Nullam lacinia
-                  consectetur sagittis. Nam sed neque id eros fermentum
-                  dignissim quis at tortor. Nullam ultricies urna quis sem
-                  sagittis pharetra. Nam erat turpis, cursus in ipsum at, tempor
-                  imperdiet metus. In interdum id nulla tristique accumsan. Ut
-                  semper in quam nec pretium. Donec egestas finibus suscipit.
-                  Curabitur tincidunt convallis arcu.{" "}
-                </p>
+                <p>{product?.description}. </p>
                 <ul>
                   <li>
                     <div class="form-group size-st">
                       <label class="size-label">Size</label>
                       <select
                         id="basic"
-                        class="selectpicker show-tick form-control"
+                        className="selectpicker show-tick form-control"
                       >
                         <option value="0">Size</option>
                         <option value="0">S</option>

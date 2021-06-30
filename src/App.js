@@ -5,34 +5,38 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import Home from "./pages/Home";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Layout>
-      <Router>
-        <Switch>
-          {/*<Route path="/login">
+    <QueryClientProvider client={queryClient}>
+      <Layout>
+        <Router>
+          <Switch>
+            {/*<Route path="/login">
               <LoginPage />
             </Route>
             <Route path="/signup">
               <SignupPage />
             </Route>*/}
-
-          <Route path="/cart">
-            <CartPage />
-          </Route>
-          <Route path="/checkout">
-            <CheckoutPage />
-          </Route>
-          <Route path="/product/:id">
-            <ProductDetailPage />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Router>
-    </Layout>
+            <Route path="/cart">
+              <CartPage />
+            </Route>
+            <Route path="/checkout">
+              <CheckoutPage />
+            </Route>
+            <Route path="/product/:id">
+              <ProductDetailPage />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Router>
+      </Layout>
+    </QueryClientProvider>
   );
 }
 
