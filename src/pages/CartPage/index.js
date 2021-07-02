@@ -1,6 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  useCreateCartItem,
+  useDeleteCartItem,
+  useEditCartItem,
+  useGetCart,
+} from "../../api/hooks/cartHook";
+import { deleteCartItem, editCartItem } from "../../api/services";
+//const mutation = useDeleteCartItem(2);
 
 const CartPage = (props) => {
+  const { isLoading, isError, data, error } = useGetCart(2);
+
+  console.log("🚀 ~ file: index.js ~ line 9 ~ CartPage ~ data", data);
+  //todo:optimize
+  const deleteCartItemHandler = (id) => {
+    deleteCartItem(id);
+  };
+  const updateCartItemHandler = (id) => {
+    editCartItem(id);
+  };
+
   return (
     <React.Fragment>
       <div class="all-title-box">
@@ -36,111 +55,66 @@ const CartPage = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td class="thumbnail-img">
-                        <a href="#">
-                          <img
-                            class="img-fluid"
-                            src="images/img-pro-01.jpg"
-                            alt=""
-                          />
-                        </a>
-                      </td>
-                      <td class="name-pr">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                      </td>
-                      <td class="price-pr">
-                        <p>$ 80.0</p>
-                      </td>
-                      <td class="quantity-box">
-                        <input
-                          type="number"
-                          size="4"
-                          value="1"
-                          min="0"
-                          step="1"
-                          class="c-input-text qty text"
-                        />
-                      </td>
-                      <td class="total-pr">
-                        <p>$ 80.0</p>
-                      </td>
-                      <td class="remove-pr">
-                        <a href="#">
-                          <i class="fas fa-times"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="thumbnail-img">
-                        <a href="#">
-                          <img
-                            class="img-fluid"
-                            src="images/img-pro-02.jpg"
-                            alt=""
-                          />
-                        </a>
-                      </td>
-                      <td class="name-pr">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                      </td>
-                      <td class="price-pr">
-                        <p>$ 60.0</p>
-                      </td>
-                      <td class="quantity-box">
-                        <input
-                          type="number"
-                          size="4"
-                          value="1"
-                          min="0"
-                          step="1"
-                          class="c-input-text qty text"
-                        />
-                      </td>
-                      <td class="total-pr">
-                        <p>$ 80.0</p>
-                      </td>
-                      <td class="remove-pr">
-                        <a href="#">
-                          <i class="fas fa-times"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="thumbnail-img">
-                        <a href="#">
-                          <img
-                            class="img-fluid"
-                            src="images/img-pro-03.jpg"
-                            alt=""
-                          />
-                        </a>
-                      </td>
-                      <td class="name-pr">
-                        <a href="#">Lorem ipsum dolor sit amet</a>
-                      </td>
-                      <td class="price-pr">
-                        <p>$ 30.0</p>
-                      </td>
-                      <td class="quantity-box">
-                        <input
-                          type="number"
-                          size="4"
-                          value="1"
-                          min="0"
-                          step="1"
-                          class="c-input-text qty text"
-                        />
-                      </td>
-                      <td class="total-pr">
-                        <p>$ 80.0</p>
-                      </td>
-                      <td class="remove-pr">
-                        <a href="#">
-                          <i class="fas fa-times"></i>
-                        </a>
-                      </td>
-                    </tr>
+                    {data?.data?.map((cartItem) => {
+                      return (
+                        <tr key={cartItem.id}>
+                          <td class="thumbnail-img">
+                            <a href="#">
+                              <img
+                                class="img-fluid"
+                                src={
+                                  "http://localhost:1337" +
+                                  cartItem.product?.thumbnail?.url
+                                }
+                                alt={
+                                  cartItem.product?.thumbnail?.alternativeText
+                                }
+                              />
+                            </a>
+                          </td>
+                          <td class="name-pr">
+                            {/* todo:make link */}
+                            <a>{cartItem.product?.name}</a>
+                          </td>
+                          <td class="price-pr">
+                            <p>{cartItem.product?.priceText}</p>
+                          </td>
+                          <td class="quantity-box">
+                            <input
+                              type="number"
+                              size="4"
+                              value={cartItem.number}
+                              min="0"
+                              step="1"
+                              class="c-input-text qty text"
+                              //todo: find way to use mutation
+                              onChange={(e) => {
+                                cartItem.number = e.target.value;
+                                console.log("🚀 ~ file: index.js ~ line 92 ~ {data?.data?.map ~ cartItem.number", cartItem.number)
+                                console.log(
+                                  "🚀 ~ file: index.js ~ line 91 ~ {data?.data?.map ~ value",
+                                  e.target.value
+                                );
+
+                                updateCartItemHandler(cartItem.id, {
+                                  number: e.target.value,
+                                });
+                              }}
+                            />
+                          </td>
+                          <td class="total-pr">
+                            <p>$ 80.0</p>
+                          </td>
+                          <td class="remove-pr">
+                            <a
+                              onClick={() => deleteCartItemHandler(cartItem.id)}
+                            >
+                              <i class="fas fa-times"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

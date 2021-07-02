@@ -1,9 +1,14 @@
 import React from "react";
 import { useGetProducts } from "../../api/hooks/productHooks";
 import { Link } from "react-router-dom";
+import { useCreateCartItem } from "../../api/hooks/cartHook";
 
 const Home = (props) => {
   const { isLoading, isError, data, error } = useGetProducts();
+  const mutation = useCreateCartItem(2);
+  const addToCartHandler = (data) => {
+    mutation.mutate(data);
+  };
   console.log("🚀 ~ file: index.js ~ line 6 ~ Home ~ data", data);
   console.log("🚀 ~ file: index.js ~ line 6 ~ Home ~ error", error);
   console.log("🚀 ~ file: index.js ~ line 6 ~ Home ~ isError", isError);
@@ -51,9 +56,9 @@ const Home = (props) => {
                         <p class="sale">New</p>
                       </div>
                       <img
-                        src={"http://localhost:1337" + product.thumbnail.url}
+                        src={"http://localhost:1337" + product?.thumbnail?.url}
                         class="img-fluid"
-                        alt={product.thumbnail.alternativeText}
+                        alt={product?.thumbnail?.alternativeText}
                       />
                       <div class="mask-icon">
                         <ul>
@@ -88,7 +93,18 @@ const Home = (props) => {
                             </a>
                           </li>
                         </ul>
-                        <a class="cart" href="#">
+                        <a
+                          class="cart"
+                          href="#"
+                          onClick={() => {
+                            //todo:make cartitem uniaque with product and customer
+                            addToCartHandler({
+                              product: product.id,
+                              customer: 2,
+                              number: 1,
+                            });
+                          }}
+                        >
                           Add to Cart
                         </a>
                       </div>
