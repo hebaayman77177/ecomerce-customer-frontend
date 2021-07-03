@@ -48,3 +48,7 @@ export const deleteCartItem = (id) => {
 export const getCustomerOrders = (id) => {
   return axios.get(`/order-items?customer.id=${id}`);
 };
+
+export const createOrder = (data) => {
+  return axios.post(`/orders`, data);
+};

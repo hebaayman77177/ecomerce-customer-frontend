@@ -18,8 +18,8 @@ export const useCreateCartItem = () => {
   return mutation;
 };
 
-export const useDeleteCartItem = (id) => {
-  const mutation = useMutation(() => deleteCartItem(id));
+export const useDeleteCartItem = () => {
+  const mutation = useMutation((id) => deleteCartItem(id));
   return mutation;
 };
 

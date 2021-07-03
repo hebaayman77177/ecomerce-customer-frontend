@@ -5,11 +5,13 @@ import {
   useEditCartItem,
   useGetCart,
 } from "../../api/hooks/cartHook";
+import { useCreateOrder } from "../../api/hooks/orderHook";
 import { deleteCartItem, editCartItem } from "../../api/services";
-//const mutation = useDeleteCartItem(2);
 
 const CartPage = (props) => {
   const { isLoading, isError, data, error } = useGetCart(2);
+  const createOrderMutation = useCreateOrder();
+  const deleteCartItemMutation = useDeleteCartItem();
 
   console.log("🚀 ~ file: index.js ~ line 9 ~ CartPage ~ data", data);
   //todo:optimize
@@ -18,6 +20,28 @@ const CartPage = (props) => {
   };
   const updateCartItemHandler = (id) => {
     editCartItem(id);
+  };
+
+  const checkOutHandler = (items) => {
+    const order = {
+      status: "init",
+      customer: 2,
+    };
+    order.order_items = items.map((item) => {
+      return {
+        product: item.product.id,
+        number: item.number,
+      };
+    });
+    createOrderMutation.mutate(order);
+    //todo: optimize and make it bulk create
+    items.forEach((item) => {
+      deleteCartItemMutation.mutate(item.id);
+    });
+    console.log(
+      "🚀 ~ file: index.js ~ line 28 ~ checkOutHandler ~ order",
+      order
+    );
   };
 
   return (
@@ -88,18 +112,18 @@ const CartPage = (props) => {
                               step="1"
                               class="c-input-text qty text"
                               //todo: find way to use mutation
-                              onChange={(e) => {
-                                cartItem.number = e.target.value;
-                                console.log("🚀 ~ file: index.js ~ line 92 ~ {data?.data?.map ~ cartItem.number", cartItem.number)
-                                console.log(
-                                  "🚀 ~ file: index.js ~ line 91 ~ {data?.data?.map ~ value",
-                                  e.target.value
-                                );
+                              //onChange={(e) => {
+                              //  cartItem.number = e.target.value;
+                              //  console.log("🚀 ~ file: index.js ~ line 92 ~ {data?.data?.map ~ cartItem.number", cartItem.number)
+                              //  console.log(
+                              //    "🚀 ~ file: index.js ~ line 91 ~ {data?.data?.map ~ value",
+                              //    e.target.value
+                              //  );
 
-                                updateCartItemHandler(cartItem.id, {
-                                  number: e.target.value,
-                                });
-                              }}
+                              //  updateCartItemHandler(cartItem.id, {
+                              //    number: e.target.value,
+                              //  });
+                              //}}
                             />
                           </td>
                           <td class="total-pr">
@@ -181,7 +205,10 @@ const CartPage = (props) => {
               </div>
             </div>
             <div class="col-12 d-flex shopping-box">
-              <a href="checkout.html" class="ml-auto btn hvr-hover">
+              <a
+                onClick={() => checkOutHandler(data?.data)}
+                class="ml-auto btn hvr-hover"
+              >
                 Checkout
               </a>{" "}
             </div>
